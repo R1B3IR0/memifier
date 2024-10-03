@@ -50,18 +50,10 @@ android {
 }
 
 dependencies {
-    //implementation(libs.androidx.media3.exoplayer)
-    //implementation(libs.androidx.media3.exoplayer.dash)
-    //implementation(libs.androidx.media3.ui)
-    // ExoPlayer Core
-    implementation (libs.exoplayer)
-
-    // ExoPlayer UI (para PlayerView)
-    implementation (libs.exoplayer.ui)
-    // FFmpeg Kit
-    implementation (libs.ffmpeg.kit.full)
 
 
+
+    implementation(libs.androidx.material)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -73,6 +65,10 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
