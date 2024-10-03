@@ -114,16 +114,16 @@ fun VideoPlaybackScreen(navController: NavController, uri: Uri) {
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                // Botão "Clipar"
+                // Botão "Clip"
                 Button(
                     onClick = {
-                        // Função para clipe de vídeo
+                        // Navega para a tela de seleção entre Foto e GIF
                     },
                     modifier = Modifier
                         .weight(1f)
                         .background(Color.Transparent)
                 ) {
-                    Text(text = "Clipar", color = Color.White)
+                    Text(text = "Clip", color = Color.White)
                 }
             }
         }
