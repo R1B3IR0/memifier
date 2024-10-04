@@ -28,24 +28,20 @@ import java.io.IOException
 fun captureClip(context: Context, videoPath: String, startTime: Float, endTime: Float) {
     val outputPath = "${context.getExternalFilesDir(null)}/captured_clip.mp4"
 
-    // Calculate the duration of the clip
     val duration = endTime - startTime
 
-    // FFmpeg command to capture a clip from `startTime` to `endTime`
     val ffmpegCommand = arrayOf(
         "-y",
         "-i", videoPath,
-        "-ss", startTime.toString(), // Start time for the clip
-        "-t", duration.toString(), // Duration of the clip
+        "-ss", startTime.toString(),
+        "-t", duration.toString(),
         outputPath
     )
 
-    // Execute FFmpeg command asynchronously
     FFmpegKit.executeAsync(ffmpegCommand.joinToString(" ")) { session ->
         val returnCode = session.returnCode
         if (ReturnCode.isSuccess(returnCode)) {
             Log.d("FFmpeg", "Clip captured successfully: $outputPath")
-            // Save the captured clip to gallery
             convertClipToGif(context, outputPath) // Pass the text to convertClipToGif
         } else {
             Log.e("FFmpeg", "Error capturing clip: $returnCode")
@@ -58,7 +54,6 @@ fun captureClip(context: Context, videoPath: String, startTime: Float, endTime: 
 fun convertClipToGif(context: Context, clipPath: String) {
     val gifPath = "${context.getExternalFilesDir(null)}/captured_clip.gif"
 
-    // FFmpeg command to convert the captured clip to GIF with text overlay using a native font
     val ffmpegCommand = arrayOf(
         "-y",
         "-i", clipPath,
@@ -84,11 +79,9 @@ fun captureCurrentFrame(videoUri: String, context: Context, onFrameCaptured: (Bi
     val retriever = MediaMetadataRetriever()
 
     try {
-        // Set the data source using the URI string
-        retriever.setDataSource(context, Uri.parse(videoUri))  // Parse the string to Uri
+        retriever.setDataSource(context, Uri.parse(videoUri))
 
-        // Specify the time to capture (in microseconds)
-        val timeUs = 5000000 // 5 seconds in microseconds
+        val timeUs = 5000000
         val bitmap = retriever.getFrameAtTime(timeUs.toLong(), MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
 
         onFrameCaptured(bitmap)
@@ -115,7 +108,7 @@ fun saveGifToGallery(context: Context, gifFilePath: String) {
             context.contentResolver.openOutputStream(gifUri).use { outputStream ->
                 outputStream?.let {
                     FileInputStream(gifFilePath).use { inputStream ->
-                        inputStream.copyTo(it) // Copy GIF data to output stream
+                        inputStream.copyTo(it)
                     }
                     Log.d("Save GIF", "GIF saved to gallery!")
                 }
@@ -126,34 +119,10 @@ fun saveGifToGallery(context: Context, gifFilePath: String) {
     }
 }
 
-fun saveClipToGallery(context: Context, clipPath: String) {
-    val contentValues = ContentValues().apply {
-        put(MediaStore.Video.Media.DISPLAY_NAME, "captured_clip_${System.currentTimeMillis()}.mp4")
-        put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
-        put(MediaStore.Video.Media.RELATIVE_PATH, Environment.DIRECTORY_MOVIES + "/MyApp") // Specify your directory
-    }
-
-    val uri = context.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)
-
-    uri?.let { videoUri ->
-        try {
-            context.contentResolver.openOutputStream(videoUri).use { outputStream ->
-                outputStream?.let { outStream ->
-                    FileInputStream(clipPath).use { inputStream ->
-                        inputStream.copyTo(outStream) // Copy video data to output stream
-                    }
-                    Log.d("Save Video", "Video saved to gallery!")
-                }
-            }
-        } catch (e: IOException) {
-            Log.e("Save Video", "Failed to save video: ${e.message}")
-        }
-    }
-}
 
 fun copyResourceToFile(context: Context, resourceId: Int): File {
     val inputStream = context.resources.openRawResource(resourceId)
-    val outputFile = File(context.cacheDir, "temp_video.mp4") // You can change the file name if needed
+    val outputFile = File(context.cacheDir, "temp_video.mp4")
 
     FileOutputStream(outputFile).use { outputStream ->
         inputStream.copyTo(outputStream)

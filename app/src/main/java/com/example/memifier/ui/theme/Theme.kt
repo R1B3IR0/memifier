@@ -9,6 +9,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
@@ -31,6 +32,17 @@ private val LightColorScheme = lightColorScheme(
     onBackground = Color(0xFF1C1B1F),
     onSurface = Color(0xFF1C1B1F),
     */
+)
+// In your Theme.kt
+val LightColorPalette = lightColorScheme(
+    primary = Color(0xFF6200EE),
+    onPrimary = Color.White,
+    secondary = Color(0xFF03DAC5),
+    onSecondary = Color.Black,
+    background = Color(0xFFFFFFFF),
+    onBackground = Color.Black,
+    surface = Color(0xFFF5F5F5),
+    onSurface = Color.Black
 )
 
 @Composable
