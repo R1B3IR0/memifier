@@ -39,6 +39,10 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.memifier.ui.theme.MemifierTheme
 import java.io.IOException
 
 
@@ -50,11 +54,23 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize ExoPlayer
         player = ExoPlayer.Builder(this).build()
 
         setContent {
-            VideoPlayerApp(player = player)
+            MemifierTheme {
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = "main_screen") {
+                    composable("main_screen") { MainScreen(navController) }
+                    composable("video_selection") {
+                        VideoListScreen {
+                            navController.navigate("video_player")
+                        }
+                    }
+                    composable("video_player") {
+                        VideoPlayerApp(player = player)
+                    }
+                }
+            }
         }
     }
 

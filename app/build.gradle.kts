@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview) // Preview support
     implementation(libs.androidx.material3) // Material 3 Design components for Compose
+    implementation(libs.compose.colorpicker)
 
     // ConstraintLayout for Compose
     implementation(libs.androidx.constraintlayout)
@@ -83,6 +84,10 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.material3.android)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
+
 
     // Testing dependencies
     testImplementation(libs.junit)

@@ -75,13 +75,20 @@ fun VideoListItem(videoName: String, thumbnailRes: Int, onClick: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = videoName,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodyLarge, // Use bodyLarge style for the title
+                color = MaterialTheme.colorScheme.onSurface, // Use color from the theme
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Button(onClick = onClick) {
-                Text(text = "Play")
+            Button(
+                onClick = onClick,
+                modifier = Modifier.fillMaxWidth(), // Make button fill width for better UX
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary, // Use primary color
+                    contentColor = MaterialTheme.colorScheme.onPrimary // Use onPrimary color
+                )
+            ) {
+                Text(text = "Play", style = MaterialTheme.typography.labelLarge) // Use a themed text style
             }
         }
     }

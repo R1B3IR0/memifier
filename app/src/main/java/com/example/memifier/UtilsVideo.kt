@@ -19,13 +19,14 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import androidx.compose.ui.geometry.Offset
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.FileInputStream
 import java.io.IOException
 
-fun captureClip(context: Context, videoPath: String, startTime: Float, endTime: Float) {
+fun captureClip(context: Context, videoPath: String, startTime: Float, endTime: Float, text: String, textPostion: Offset, aspectRatio: CustomAspectRatio) {
     val outputPath = "${context.getExternalFilesDir(null)}/captured_clip.mp4"
 
     val duration = endTime - startTime
@@ -42,7 +43,7 @@ fun captureClip(context: Context, videoPath: String, startTime: Float, endTime: 
         val returnCode = session.returnCode
         if (ReturnCode.isSuccess(returnCode)) {
             Log.d("FFmpeg", "Clip captured successfully: $outputPath")
-            convertClipToGif(context, outputPath) // Pass the text to convertClipToGif
+            convertClipToGif(context, outputPath, text, textPostion, aspectRatio)
         } else {
             Log.e("FFmpeg", "Error capturing clip: $returnCode")
         }
@@ -51,13 +52,19 @@ fun captureClip(context: Context, videoPath: String, startTime: Float, endTime: 
 
 
 
-fun convertClipToGif(context: Context, clipPath: String) {
+fun convertClipToGif(context: Context, clipPath: String, text: String, textPosition: Offset, aspectRatio: CustomAspectRatio) {
     val gifPath = "${context.getExternalFilesDir(null)}/captured_clip.gif"
+
+    val textX = textPosition.x.toString()
+    val textY = textPosition.y.toString()
+
+    val newWidth = 320
+    val newHeight = (newWidth * aspectRatio.height / aspectRatio.width).toInt()
 
     val ffmpegCommand = arrayOf(
         "-y",
         "-i", clipPath,
-        "-vf", "fps=10,scale=320:-1:flags=lanczos",
+        "-vf", "fps=10,scale=$newWidth:$newHeight:-1:flags=lanczos,drawtext=text='$text':x=$textX:y=$textY:fontsize=24:fontcolor=white:fontfile=/system/fonts/Roboto-Regular.ttf",
         gifPath
     )
 
@@ -65,7 +72,6 @@ fun convertClipToGif(context: Context, clipPath: String) {
         val returnCode = session.returnCode
         if (ReturnCode.isSuccess(returnCode)) {
             Log.d("FFmpeg", "GIF created successfully: $gifPath")
-            // Save the GIF to the gallery
             saveGifToGallery(context, gifPath)
         } else {
             Log.e("FFmpeg", "Error converting to GIF: $returnCode")
